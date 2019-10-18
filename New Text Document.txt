@@ -1,0 +1,2 @@
+CREATE TABLE history (id bigint not null, expiration_date datetime, users_history bigint not null, primary key (id));
+INSERT INTO history (id,expiration_date,users_history) VALUES (1,'2019-09-09' , 5);
