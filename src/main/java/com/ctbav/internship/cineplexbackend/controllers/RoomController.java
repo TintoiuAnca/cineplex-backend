@@ -18,7 +18,7 @@ import com.ctbav.internship.cineplexbackend.models.Room;
 import com.ctbav.internship.cineplexbackend.repositories.RoomRepository;
 
 @RestController
-@RequestMapping("/api/v1/rooms")
+@RequestMapping("/api/v1/room")
 public class RoomController {
 
 	@Autowired

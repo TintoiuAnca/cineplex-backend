@@ -16,7 +16,7 @@ import com.ctbav.internship.cineplexbackend.models.Reservation;
 import com.ctbav.internship.cineplexbackend.repositories.ReservationRepository;
 
 @RestController
-@RequestMapping("/api/v1/reservations")
+@RequestMapping("/api/v1/reservation")
 public class ReservationController {
 
 	@Autowired
