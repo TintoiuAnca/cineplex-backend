@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,8 +18,6 @@ import com.ctbav.internship.cineplexbackend.DTO.MovieDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -72,11 +69,9 @@ public class Movie implements Serializable {
 	@JsonIgnore
 	private List<Seat> seats;
 
-	@OneToMany(mappedBy = "scheduledMovie", fetch = FetchType.EAGER)
-	@JsonInclude(Include.NON_NULL)
+	@OneToMany(mappedBy = "scheduledMovie")
+	@JsonIgnore
 	private List<Schedule> movieSchedules;
-
-
 
 	@OneToMany(mappedBy = "movieName")
 	@JsonIgnore
@@ -132,6 +127,7 @@ public class Movie implements Serializable {
 		setTime(entity.getTime());
 		setVideo(entity.getVideo());
 		setImage(entity.getImage());
+		
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -259,7 +255,7 @@ public class Movie implements Serializable {
 		return "Movie [id=" + id + ", format=" + format + ", name=" + name + ", gendre=" + gendre + ", description="
 				+ description + ", time=" + time + ", ageRecommandation=" + ageRecommandation + ", distribution="
 				+ distribution + ", director=" + director + ", rating=" + rating + ", video=" + video + ", image="
-				+ image + ", cinemaDate=" + cinemaDate + ", movieSchedules=" + movieSchedules + "]";
+				+ image + ", cinemaDate=" + cinemaDate ;
 	}
 
 	

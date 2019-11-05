@@ -101,4 +101,11 @@ public class ScheduleDTO {
 		setRoom(schedule.getRoom());
 		setScheduledMovie(schedule.getScheduledMovie());
 	}
+
+	@Override
+	public String toString() {
+		return "ScheduleDTO [id=" + id + ", hour=" + hour + ", date=" + date + ", scheduledMovie=" + scheduledMovie
+				+ ", room=" + room + "]";
+	}
+	
 }

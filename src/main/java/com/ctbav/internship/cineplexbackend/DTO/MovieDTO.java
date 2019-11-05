@@ -46,7 +46,7 @@ public class MovieDTO implements Serializable {
 
 	public MovieDTO(Long id, String format, String name, String gendre, String description, Date time,
 			int ageRecommandation, String distribution, String director, double rating, String video, String image,
-			List<Schedule> movieSchedules, Date cinemaDate) {
+			Date cinemaDate) {
 		super();
 		this.id = id;
 		this.format = format;
@@ -60,9 +60,8 @@ public class MovieDTO implements Serializable {
 		this.rating = rating;
 		this.video = video;
 		this.image = image;
-		this.movieSchedules = movieSchedules;
 		this.cinemaDate = cinemaDate;
-		this.movieSchedules = movieSchedules;
+
 	}
 
 	public Long getId() {
@@ -205,7 +204,6 @@ public class MovieDTO implements Serializable {
 		setTime(movie.getTime());
 		setVideo(movie.getVideo());
 		setImage(movie.getImage());
-
 	}
 
 	public MovieDTO() {
@@ -217,7 +215,7 @@ public class MovieDTO implements Serializable {
 		return "MovieDTO [id=" + id + ", format=" + format + ", name=" + name + ", gendre=" + gendre + ", description="
 				+ description + ", time=" + time + ", ageRecommandation=" + ageRecommandation + ", distribution="
 				+ distribution + ", director=" + director + ", rating=" + rating + ", video=" + video + ", image="
-				+ image + ", movieSchedules=" + movieSchedules + ", cinemaDate=" + cinemaDate + "]";
+				+ image +  ", cinemaDate=" + cinemaDate + "]";
 	}
 
 }

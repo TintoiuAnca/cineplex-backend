@@ -1,7 +1,9 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.ctbav.internship.cineplexbackend.DTO.ScheduleDTO;
+import com.ctbav.internship.cineplexbackend.models.Movie;
 import com.ctbav.internship.cineplexbackend.models.Schedule;
+import com.ctbav.internship.cineplexbackend.repositories.MovieRepository;
 import com.ctbav.internship.cineplexbackend.repositories.ScheduleRepository;
 
 @RestController
@@ -23,8 +27,12 @@ public class ScheduleController {
 	private ScheduleRepository scheduleRepository;
 
 	@Autowired
-	public ScheduleController(ScheduleRepository scheduleRepo) {
+	private MovieRepository movieRepository;
+
+	@Autowired
+	public ScheduleController(ScheduleRepository scheduleRepo, MovieRepository movieRepo) {
 		this.scheduleRepository = scheduleRepo;
+		this.movieRepository = movieRepo;
 	}
 
 	@GetMapping
@@ -35,15 +43,18 @@ public class ScheduleController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void create(@RequestBody ScheduleDTO scheduleDto) throws ParseException {
-		Schedule schedule = new Schedule(scheduleDto);
-		scheduleRepository.save(schedule);
+		Schedule schedules = new Schedule(scheduleDto);
+		scheduleRepository.save(schedules);
 	}
 
 	@GetMapping("/{id}")
-	public ScheduleDTO get(@PathVariable("id") long id) throws ParseException {
-		Schedule schedule = scheduleRepository.getOne(id);
-		ScheduleDTO scheduleDto = new ScheduleDTO(schedule);
-		return scheduleDto;
+	public List<Schedule> get(@PathVariable("id") long id) throws ParseException {
+		List<Schedule> schedules = new ArrayList<>();
+		Optional<Movie> movie = movieRepository.findById(id);
+		if (movie.isPresent()) {
+			schedules = this.scheduleRepository.findAllByScheduledMovie(movie.get());
+		}
+		return schedules;
 	}
 
 	@DeleteMapping("/{id}")
