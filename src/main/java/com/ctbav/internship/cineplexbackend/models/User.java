@@ -44,6 +44,8 @@ public class User implements Serializable {
 
 	private String address;
 
+	private String password;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date dateBirth;
 
@@ -67,8 +69,9 @@ public class User implements Serializable {
 	public User() {
 
 	}
+
 	public User(String userType) {
-		this.userType=new UserType(userType);
+		this.userType = new UserType(userType);
 	}
 
 	public User(UserDTO userDto) throws ParseException {
@@ -77,7 +80,8 @@ public class User implements Serializable {
 		setDateBirth(userDto.getDateBirth());
 		setMail(userDto.getMail());
 		setPhoneNumber(userDto.getPhoneNumber());
-		
+		setPassword(userDto.getPassword());
+
 	}
 
 	public Long getId() {
@@ -120,7 +124,15 @@ public class User implements Serializable {
 		this.address = address;
 	}
 
-	 @Temporal(TemporalType.TIMESTAMP)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getDateBirth() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -129,7 +141,7 @@ public class User implements Serializable {
 		return date;
 	}
 
-	 @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	public void setDateBirth(Date dateBirth) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -147,8 +159,7 @@ public class User implements Serializable {
 	}
 
 	public User(Long id, String userName, String mail, String phoneNumber, String address, Date dateBirth,
-			UserType userType) {
-		super();
+			UserType userType, String password) {
 		this.id = id;
 		this.userName = userName;
 		this.mail = mail;
@@ -156,12 +167,14 @@ public class User implements Serializable {
 		this.address = address;
 		this.dateBirth = dateBirth;
 		this.userType = userType;
+		this.password = password;
 	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", mail=" + mail + ", phoneNumber=" + phoneNumber
-				+ ", address=" + address + ", dateBirth=" + dateBirth + ", userType=" + userType + "]";
+				+ ", address=" + address + ", password=" + password + ", dateBirth=" + dateBirth + ", userType="
+				+ userType + "]";
 	}
 
 }

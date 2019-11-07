@@ -52,6 +52,7 @@ public class UserDTO {
 		setDateBirth(user.getDateBirth());
 		setMail(user.getMail());
 		setPhoneNumber(user.getPhoneNumber());
+		setPassword(user.getPassword());
 	}
 
 	public void setPassword(String password) {
