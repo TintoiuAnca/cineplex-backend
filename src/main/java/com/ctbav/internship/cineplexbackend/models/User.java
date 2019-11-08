@@ -46,7 +46,7 @@ public class User implements Serializable {
 
 	private String password;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateBirth;
 
 	@ManyToOne
@@ -134,7 +134,7 @@ public class User implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getDateBirth() throws ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String strDate = formatter.format(dateBirth);
 		Date date = formatter.parse(strDate);
@@ -143,7 +143,7 @@ public class User implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	public void setDateBirth(Date dateBirth) throws ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String strDate = formatter.format(dateBirth);
 		Date date = formatter.parse(strDate);
