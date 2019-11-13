@@ -132,7 +132,7 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	public Date getDateBirth() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -141,7 +141,7 @@ public class User implements Serializable {
 		return date;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	public void setDateBirth(Date dateBirth) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));

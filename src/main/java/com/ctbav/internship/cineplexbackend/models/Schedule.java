@@ -32,7 +32,10 @@ public class Schedule {
 	private Long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-	private Date hour;
+	private Date startTime;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+	private Date endTime;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date;
@@ -52,19 +55,25 @@ public class Schedule {
 	@JsonIgnore
 	private List<Ticket> tickets;
 
-	@Override
-	public String toString() {
-		return "Schedule [id=" + id + ", hour=" + hour + ", date=" + date + ", scheduledMovie=" + scheduledMovie
-				+ ", room=" + room + "]";
-	}
-
-	public Schedule(Long id, Date hour, Date date, Movie scheduledMovie, Room room) {
-		super();
+	public Schedule(Long id, Date startTime, Date endTime, Date date, Movie scheduledMovie, Room room) {
 		this.id = id;
-		this.hour = hour;
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.date = date;
 		this.scheduledMovie = scheduledMovie;
 		this.room = room;
+	}
+
+	public Schedule(ScheduleDTO scheduleDto) throws ParseException {
+		setDate(scheduleDto.getDate());
+		setStartTime(scheduleDto.getStartTime());
+		setEndTime(scheduleDto.getEndTime());
+		setRoom(scheduleDto.getRoom());
+		setScheduledMovie(scheduleDto.getScheduledMovie());
+	}
+
+	public Schedule() {
+
 	}
 
 	public Long getId() {
@@ -76,28 +85,42 @@ public class Schedule {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date getHour() throws ParseException {
+	public Date getStartTime() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String strDate = formatter.format(hour);
+		String strDate = formatter.format(startTime);
 		Date date = formatter.parse(strDate);
 		return date;
 	}
 
-	public Schedule() {
-		super();
-	}
-
 	@Temporal(TemporalType.TIMESTAMP)
-	public void setHour(Date hour) throws ParseException {
+	public void setStartTime(Date startTime) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String strDate = formatter.format(hour);
+		String strDate = formatter.format(startTime);
 		Date date = formatter.parse(strDate);
-		this.hour = date;
+		this.startTime = date;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
+	public void setEndTime(Date endTime) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String strDate = formatter.format(endTime);
+		Date date = formatter.parse(strDate);
+		this.endTime = date;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getEndTime() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String strDate = formatter.format(endTime);
+		Date date = formatter.parse(strDate);
+		return date;
+	}
+
+	@Temporal(TemporalType.DATE)
 	public Date getDate() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -106,7 +129,7 @@ public class Schedule {
 		return date;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	public void setDate(Date date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -131,10 +154,9 @@ public class Schedule {
 		this.room = room;
 	}
 
-	public Schedule(ScheduleDTO scheduleDto) throws ParseException {
-		setDate(scheduleDto.getDate());
-		setHour(scheduleDto.getHour());
-		setRoom(scheduleDto.getRoom());
-		setScheduledMovie(scheduleDto.getScheduledMovie());
+	@Override
+	public String toString() {
+		return "Schedule [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", date=" + date
+				+ ", scheduledMovie=" + scheduledMovie + ", room=" + room + ", tickets=" + tickets + "]";
 	}
 }

@@ -15,12 +15,31 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ScheduleDTO {
 	private Long id;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-	private Date hour;
+	private Date startTime;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+	private Date endTime;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date;
 	private Movie scheduledMovie;
 	private Room room;
+
+	public ScheduleDTO(Long id, Date startTime, Date endTime, Date date, Movie scheduledMovie, Room room) {
+		super();
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.date = date;
+		this.scheduledMovie = scheduledMovie;
+		this.room = room;
+	}
+
+	public ScheduleDTO() {
+
+	}
 
 	public Long getId() {
 		return id;
@@ -31,24 +50,42 @@ public class ScheduleDTO {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date getHour() throws ParseException {
+	public Date getEndTime() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String strDate = formatter.format(hour);
+		String strDate = formatter.format(endTime);
 		Date date = formatter.parse(strDate);
 		return date;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public void setHour(Date hour) throws ParseException {
+	public void setEndTime(Date endTime) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String strDate = formatter.format(hour);
+		String strDate = formatter.format(endTime);
 		Date date = formatter.parse(strDate);
-		this.hour = date;
+		this.endTime = date;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
+	public Date getStartTime() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String strDate = formatter.format(startTime);
+		Date date = formatter.parse(strDate);
+		return date;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	public void setStartTime(Date startTime) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String strDate = formatter.format(startTime);
+		Date date = formatter.parse(strDate);
+		this.startTime = date;
+	}
+
+	@Temporal(TemporalType.DATE)
 	public Date getDate() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -57,7 +94,7 @@ public class ScheduleDTO {
 		return data;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	public void setDate(Date date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -82,30 +119,10 @@ public class ScheduleDTO {
 		this.room = room;
 	}
 
-	public ScheduleDTO(Long id, Date hour, Date date, Movie scheduledMovie, Room room) {
-		super();
-		this.id = id;
-		this.hour = hour;
-		this.date = date;
-		this.scheduledMovie = scheduledMovie;
-		this.room = room;
-	}
-
-	public ScheduleDTO() {
-
-	}
-
-	public ScheduleDTO(Schedule schedule) throws ParseException {
-		setDate(schedule.getDate());
-		setHour(schedule.getHour());
-		setRoom(schedule.getRoom());
-		setScheduledMovie(schedule.getScheduledMovie());
-	}
-
 	@Override
 	public String toString() {
-		return "ScheduleDTO [id=" + id + ", hour=" + hour + ", date=" + date + ", scheduledMovie=" + scheduledMovie
-				+ ", room=" + room + "]";
+		return "ScheduleDTO [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", date=" + date
+				+ ", scheduledMovie=" + scheduledMovie + ", room=" + room + "]";
 	}
-	
+
 }
