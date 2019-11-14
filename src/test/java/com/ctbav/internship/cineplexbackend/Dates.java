@@ -1,33 +1,28 @@
 package com.ctbav.internship.cineplexbackend;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.List;
 
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import com.ctbav.internship.cineplexbackend.controllers.ScheduleController;
+import com.ctbav.internship.cineplexbackend.models.Schedule;
+import com.ctbav.internship.cineplexbackend.util.IntervalScheduling;
 
-import com.ctbav.internship.cineplexbackend.DTO.ScheduleDTO;
-
+@ExtendWith(MockitoExtension.class)
 public class Dates {
-	ScheduleDTO schedule=new ScheduleDTO();
+
+	@InjectMocks
+	ScheduleController scheduleController;
 
 	@Test
-	public void test() {
-		String hour="12:30";
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String strDate = formatter.format(hour);
-		try {
-			Date date = formatter.parse(strDate);
-			System.out.println(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
+	public void test() throws ParseException {
+		List<Schedule> schedules = scheduleController.list();
+		IntervalScheduling interval = new IntervalScheduling();
+		interval.findOptimalSchedule(schedules);
+
 	}
 
 }

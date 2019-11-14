@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Schedule {
+public class Schedule  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -159,4 +159,5 @@ public class Schedule {
 		return "Schedule [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", date=" + date
 				+ ", scheduledMovie=" + scheduledMovie + ", room=" + room + ", tickets=" + tickets + "]";
 	}
+
 }

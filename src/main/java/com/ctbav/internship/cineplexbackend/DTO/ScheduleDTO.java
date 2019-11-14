@@ -10,7 +10,6 @@ import javax.persistence.TemporalType;
 
 import com.ctbav.internship.cineplexbackend.models.Movie;
 import com.ctbav.internship.cineplexbackend.models.Room;
-import com.ctbav.internship.cineplexbackend.models.Schedule;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ScheduleDTO {
