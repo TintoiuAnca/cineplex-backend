@@ -55,6 +55,7 @@ public class SeatDTO {
 	}
 
 	public SeatDTO(Seat seat) {
+		setId(seat.getId());
 		setAvailability(seat.getAvailability());
 		setRooms(seat.getRooms());
 		setMovies(seat.getMovies());

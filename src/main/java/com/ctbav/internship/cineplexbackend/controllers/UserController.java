@@ -39,12 +39,13 @@ public class UserController {
 
 	@GetMapping
 	public List<User> list() {
+		System.out.println("da");
 		return userRepository.findAll();
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create(@PathParam("user") @RequestBody UserDTO userDto) throws ParseException {
+	public void create( @RequestBody UserDTO userDto) throws ParseException {
 		UserType userType=userTypeRepository.findByTypeName(userDto.getUserType().getTypeName()).get();
 		User user = new User(userDto);
 		user.setUserType(userType);

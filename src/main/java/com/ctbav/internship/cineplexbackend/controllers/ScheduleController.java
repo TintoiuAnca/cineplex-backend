@@ -19,6 +19,7 @@ import com.ctbav.internship.cineplexbackend.models.Movie;
 import com.ctbav.internship.cineplexbackend.models.Schedule;
 import com.ctbav.internship.cineplexbackend.repositories.MovieRepository;
 import com.ctbav.internship.cineplexbackend.repositories.ScheduleRepository;
+import com.ctbav.internship.cineplexbackend.util.ComparatorSchedule;
 
 @RestController
 @RequestMapping("/api/v1/schedule")
@@ -37,6 +38,7 @@ public class ScheduleController {
 
 	@GetMapping
 	public List<Schedule> list() {
+	//	scheduleRepository.findAll().sort(new ComparatorSchedule());
 		return scheduleRepository.findAll();
 	}
 
