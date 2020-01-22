@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CineplexBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CineplexBackendApplication.class, args);
+		SpringApplication.run(CineplexBackendApplication.class, args);	
 	}
 
 }
