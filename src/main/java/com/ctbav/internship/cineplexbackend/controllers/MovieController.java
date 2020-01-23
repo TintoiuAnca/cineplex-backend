@@ -1,6 +1,7 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,18 @@ public class MovieController {
 	}
 
 	@GetMapping()
-	public List<Movie> list() {
-		return movieRepository.findAll();
+	public List<MovieDTO> list() throws ParseException {
+		List<Movie> movies = new ArrayList<Movie>();
+		movies = movieRepository.findAll();
+		List<MovieDTO> list = new ArrayList<MovieDTO>();
+		MovieDTO movieDTO;
+		for (Movie m : movies) {
+			movieDTO = new MovieDTO(m);
+			list.add(movieDTO);
+
+		}
+
+		return list;
 	}
 
 	@PostMapping

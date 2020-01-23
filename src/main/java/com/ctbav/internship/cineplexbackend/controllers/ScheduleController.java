@@ -1,7 +1,9 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +39,18 @@ public class ScheduleController {
 	}
 
 	@GetMapping
-	public List<Schedule> list() {
-	//	scheduleRepository.findAll().sort(new ComparatorSchedule());
-		return scheduleRepository.findAll();
+	public List<ScheduleDTO> list() throws ParseException {
+		List<Schedule> schedules = new ArrayList<Schedule>();
+		schedules = scheduleRepository.findAll();
+		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>();
+		ScheduleDTO scheduleDTO;
+		for (Schedule s : schedules) {
+			scheduleDTO = new ScheduleDTO(s);
+			list.add(scheduleDTO);
+
+		}
+		list.sort(new ComparatorSchedule());
+		return list;
 	}
 
 	@PostMapping
@@ -50,13 +61,33 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/{id}")
-	public List<Schedule> get(@PathVariable("id") long id) throws ParseException {
-		List<Schedule> schedules = new ArrayList<>();
-		Optional<Movie> movie = movieRepository.findById(id);
+	public List<ScheduleDTO> get(@PathVariable("id") long id) throws ParseException {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); //get the current date
+		Date date = new Date();
+		String strDate = formatter.format(date);
+		Date data = formatter.parse(strDate);
+		System.out.println("THIS IS THE DATE:" + data);
+		List<Schedule> schedules = new ArrayList<Schedule>();// operating with model object Schedule
+		
+		Optional<Movie> movie = movieRepository.findById(id);// find the movie using the id in the URL
 		if (movie.isPresent()) {
-			schedules = this.scheduleRepository.findAllByScheduledMovie(movie.get());
+			schedules = this.scheduleRepository.findAllByScheduledMovie(movie.get());// get all schedules for the movie
+			schedules = this.scheduleRepository.findAllByDate(data); // get all schedules by current day
 		}
-		return schedules;
+		
+		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>(); // convert Schedule to ScheduleDTO
+		ScheduleDTO scheduleDTO;
+		for (Schedule s : schedules) {
+			scheduleDTO = new ScheduleDTO(s);
+			list.add(scheduleDTO);
+
+		}
+		
+		System.out.println(list);
+		list.sort(new ComparatorSchedule()); // sort schedules in ascending order by starting time
+		
+		return list;
 	}
 
 	@DeleteMapping("/{id}")

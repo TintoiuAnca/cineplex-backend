@@ -10,6 +10,7 @@ import javax.persistence.TemporalType;
 
 import com.ctbav.internship.cineplexbackend.models.Movie;
 import com.ctbav.internship.cineplexbackend.models.Room;
+import com.ctbav.internship.cineplexbackend.models.Schedule;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ScheduleDTO {
@@ -36,8 +37,18 @@ public class ScheduleDTO {
 		this.room = room;
 	}
 
-	public ScheduleDTO() {
+	public ScheduleDTO(Schedule schedule) throws ParseException {
+		setDate(schedule.getDate());
+		setEndTime(schedule.getEndTime());
+		setId(schedule.getId());
+		setRoom(schedule.getRoom());
+		setScheduledMovie(schedule.getScheduledMovie());
+		setStartTime(schedule.getStartTime());
 
+	}
+
+	public ScheduleDTO() {
+		
 	}
 
 	public Long getId() {

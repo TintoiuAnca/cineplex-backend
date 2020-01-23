@@ -19,10 +19,7 @@ public class Dates {
 
 	@Test
 	public void test() throws ParseException {
-		List<Schedule> schedules = scheduleController.list();
-		IntervalScheduling interval = new IntervalScheduling();
-		interval.findOptimalSchedule(schedules);
-
+		
 	}
 
 }
