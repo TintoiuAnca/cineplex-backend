@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.ctbav.internship.cineplexbackend.DTO.UserTypeDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -70,7 +71,9 @@ public class UserType implements Serializable{
 		this.users = users;
 	}
 
-	public UserType() {
+	public UserType(UserTypeDTO userDTO) {
+		setId(userDTO.getId());
+		setTypeName(userDTO.getTypeName());
 	}
 
 	public UserType(String userType) {

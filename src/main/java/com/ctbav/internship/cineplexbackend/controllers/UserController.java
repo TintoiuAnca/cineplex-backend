@@ -2,6 +2,8 @@ package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,18 +36,26 @@ public class UserController {
 	}
 
 	@GetMapping
-	public List<User> list() {
-		System.out.println("da");
-		return userRepository.findAll();
+	public List<UserDTO> list() {
+		return userRepository.findAll().stream().map(u->{
+			try {
+				return new UserDTO(u);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create( @RequestBody UserDTO userDto) throws ParseException {
+	public User create( @RequestBody UserDTO userDto) throws ParseException {
 		UserType userType=userTypeRepository.findByTypeName(userDto.getUserType().getTypeName()).get();
 		User user = new User(userDto);
 		user.setUserType(userType);
 		userRepository.save(user);
+		return user;
 	}
 
 	@GetMapping("/{id}")

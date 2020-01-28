@@ -31,37 +31,38 @@ import com.ctbav.internship.cineplexbackend.repositories.SeatRepository;
 public class SeatController {
 	@Autowired
 	private SeatRepository seatRepository;
-	
+
 	@Autowired
 	private MovieRepository movieRepository;
 
 	@Autowired
-	public SeatController(SeatRepository seatRepo,MovieRepository movieRepo) {
+	public SeatController(SeatRepository seatRepo, MovieRepository movieRepo) {
 		this.seatRepository = seatRepo;
-		this.movieRepository=movieRepo;
+		this.movieRepository = movieRepo;
 	}
 
 	@GetMapping
-	public List<Seat> list() {
-		return seatRepository.findAll();
+	public List<SeatDTO> list() {
+		return seatRepository.findAll().stream().map(s -> new SeatDTO(s)).collect(Collectors.toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create(@PathParam("user") @RequestBody SeatDTO seatDto) {
+	public Seat create(@RequestBody SeatDTO seatDto) {
 		Seat seat = new Seat(seatDto);
 		seatRepository.save(seat);
+		return seat;
 	}
 
 	@GetMapping("/{id}")
-	public List<SeatDTO> get(@PathVariable("id") long id) {
-		List<Seat> seats=new ArrayList<Seat>(); 
+	public List<SeatDTO> getAllSeatsByMovie(@PathVariable("id") long id) {
+		List<Seat> seats = new ArrayList<Seat>();
 		Optional<Movie> movie = movieRepository.findById(id);
-		if(movie.isPresent())
-			seats=this.seatRepository.findAllByMovies(movie.get());
-		List<SeatDTO> seatsDTO=new ArrayList<SeatDTO>();
-		for(Seat s:seats) {
-		seatsDTO=seats.stream().map(st->new SeatDTO(s)).collect(Collectors.toList());
+		if (movie.isPresent())
+			seats = this.seatRepository.findAllByMovies(movie.get());
+		List<SeatDTO> seatsDTO = new ArrayList<SeatDTO>();
+		for (Seat s : seats) {
+			seatsDTO = seats.stream().map(st -> new SeatDTO(s)).collect(Collectors.toList());
 		}
 		return seatsDTO;
 	}

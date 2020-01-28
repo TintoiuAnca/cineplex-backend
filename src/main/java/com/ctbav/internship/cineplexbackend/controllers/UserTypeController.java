@@ -1,6 +1,7 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,14 +23,16 @@ public class UserTypeController {
 	private UserTypeRepository userTypeRepository;
 
 	@GetMapping
-	public List<UserType> list() {
-		return userTypeRepository.findAll();
+	public List<UserTypeDTO> list() {
+		return userTypeRepository.findAll().stream().map(u -> new UserTypeDTO(u)).collect(Collectors.toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create(@RequestBody UserType userType) {
+	public UserType create(@RequestBody UserTypeDTO userTypeDto) {
+		UserType userType = new UserType(userTypeDto);
 		userTypeRepository.save(userType);
+		return userType;
 	}
 
 	@GetMapping("/{id}")

@@ -2,6 +2,8 @@ package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,8 +30,16 @@ public class StatisticController {
 	}
 
 	@GetMapping()
-	public List<Statistic> list() {
-		return statisticRepository.findAll();
+	public List<StatisticDTO> list() {
+		return statisticRepository.findAll().stream().map(s->{
+			try {
+				return new StatisticDTO(s);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
 	}
 
 	@PostMapping

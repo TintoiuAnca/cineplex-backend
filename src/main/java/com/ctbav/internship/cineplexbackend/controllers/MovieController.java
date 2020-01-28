@@ -1,8 +1,8 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,33 +31,28 @@ public class MovieController {
 
 	@GetMapping()
 	public List<MovieDTO> list() throws ParseException {
-		List<Movie> movies = new ArrayList<Movie>();
-		movies = movieRepository.findAll();
-		List<MovieDTO> list = new ArrayList<MovieDTO>();
-		MovieDTO movieDTO;
-		for (Movie m : movies) {
-			movieDTO = new MovieDTO(m);
-			list.add(movieDTO);
-
-		}
-
-		return list;
+		return movieRepository.findAll().stream().map(m->{
+			try {
+				return new MovieDTO(m);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public MovieDTO create(@RequestBody MovieDTO movieDto) throws ParseException {
+	public Movie create(@RequestBody MovieDTO movieDto) throws ParseException {
 		Movie movie = new Movie(movieDto);
 		movieRepository.save(movie);
-		MovieDTO movieDTO = new MovieDTO(movie);
-		return movieDTO;
+		return movie;
 	}
 
 	@GetMapping(value = "/{id}", produces = "application/json")
 	public MovieDTO get(@PathVariable("id") long id) throws ParseException {
 		Movie movie = movieRepository.getOne(id);
 		MovieDTO movieDto = new MovieDTO(movie);
-		System.out.println(movieDto.toString());
 		return movieDto;
 	}
 

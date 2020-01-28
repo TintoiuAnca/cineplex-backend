@@ -1,6 +1,7 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,8 @@ public class RoomController {
 	}
 
 	@GetMapping()
-	public List<Room> list() {
-		return roomRepository.findAll();
+	public List<RoomDTO> list() {
+		return roomRepository.findAll().stream().map(r->new RoomDTO(r)).collect(Collectors.toList());
 	}
 
 	@PostMapping

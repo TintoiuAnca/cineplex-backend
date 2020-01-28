@@ -1,6 +1,8 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +29,8 @@ public class PaymentController {
 	}
 
 	@GetMapping()
-	public List<Payment> list() {
-		return paymentRepository.findAll();
+	public List<PaymentDTO> list() {
+		return paymentRepository.findAll().stream().map(p->new PaymentDTO(p)).collect(Collectors.toList());
 	}
 
 	@PostMapping

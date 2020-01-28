@@ -1,6 +1,8 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +29,8 @@ public class TicketController {
 	}
 
 	@GetMapping()
-	public List<Ticket> list() {
-		return ticketRepository.findAll();
+	public List<TicketDTO> list() {
+		return ticketRepository.findAll().stream().map(t -> new TicketDTO(t)).collect(Collectors.toList());
 	}
 
 	@PostMapping

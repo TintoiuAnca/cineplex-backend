@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,54 +41,44 @@ public class ScheduleController {
 
 	@GetMapping
 	public List<ScheduleDTO> list() throws ParseException {
-		List<Schedule> schedules = new ArrayList<Schedule>();
-		schedules = scheduleRepository.findAll();
-		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>();
-		ScheduleDTO scheduleDTO;
-		for (Schedule s : schedules) {
-			scheduleDTO = new ScheduleDTO(s);
-			list.add(scheduleDTO);
-
-		}
-		list.sort(new ComparatorSchedule());
-		return list;
+		ComparatorSchedule comparatorSchedule = new ComparatorSchedule();
+		return scheduleRepository.findAll().stream().sorted(comparatorSchedule::compare).map(t -> {
+			try {
+				return new ScheduleDTO(t);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create(@RequestBody ScheduleDTO scheduleDto) throws ParseException {
-		Schedule schedules = new Schedule(scheduleDto);
-		scheduleRepository.save(schedules);
+	public Schedule create(@RequestBody ScheduleDTO scheduleDto) throws ParseException {
+		Schedule schedule = new Schedule(scheduleDto);
+		scheduleRepository.save(schedule);
+		return schedule;
 	}
 
 	@GetMapping("/{id}")
-	public List<ScheduleDTO> get(@PathVariable("id") long id) throws ParseException {
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); //get the current date
-		Date date = new Date();
-		String strDate = formatter.format(date);
-		Date data = formatter.parse(strDate);
-		System.out.println("THIS IS THE DATE:" + data);
-		List<Schedule> schedules = new ArrayList<Schedule>();// operating with model object Schedule
-		
+	public List<ScheduleDTO> getScheduleByMovie(@PathVariable("id") long id) throws ParseException {
 		Optional<Movie> movie = movieRepository.findById(id);// find the movie using the id in the URL
-		if (movie.isPresent()) {
-			schedules = this.scheduleRepository.findAllByScheduledMovie(movie.get());// get all schedules for the movie
-			schedules = this.scheduleRepository.findAllByDate(data); // get all schedules by current day
-		}
-		
-		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>(); // convert Schedule to ScheduleDTO
-		ScheduleDTO scheduleDTO;
-		for (Schedule s : schedules) {
-			scheduleDTO = new ScheduleDTO(s);
-			list.add(scheduleDTO);
-
-		}
-		
-		System.out.println(list);
-		list.sort(new ComparatorSchedule()); // sort schedules in ascending order by starting time
-		
-		return list;
+		ComparatorSchedule comparatorSchedule = new ComparatorSchedule();
+		return scheduleRepository.findAllByScheduledMovie(movie.get()).stream().sorted(comparatorSchedule::compare)
+				.map(t -> {
+					try {
+						return new ScheduleDTO(t);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					return null;
+				}).collect(Collectors.toList());
+//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); //get the current date
+//		Date date = new Date();
+//		String strDate = formatter.format(date);
+//		Date data = formatter.parse(strDate);
+//		System.out.println("THIS IS THE DATE:" + data);
 	}
 
 	@DeleteMapping("/{id}")
