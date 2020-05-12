@@ -17,7 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ctbav.internship.cineplexbackend.DTO.UserDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -129,7 +129,8 @@ public class User implements Serializable {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+	     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    this.password = passwordEncoder.encode(password);
 	}
 
 	@Temporal(TemporalType.DATE)

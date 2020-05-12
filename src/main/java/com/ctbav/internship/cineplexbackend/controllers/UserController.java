@@ -23,50 +23,51 @@ import com.ctbav.internship.cineplexbackend.repositories.UserTypeRepository;
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private UserTypeRepository userTypeRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-	@Autowired
-	public UserController(UserRepository userRepo, UserTypeRepository userTypeRepository) {
-		this.userRepository = userRepo;
-		this.userTypeRepository=userTypeRepository;
-	}
+  @Autowired
+  private UserTypeRepository userTypeRepository;
 
-	@GetMapping
-	public List<UserDTO> list() {
-		return userRepository.findAll().stream().map(u->{
-			try {
-				return new UserDTO(u);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}).collect(Collectors.toList());
-	}
+  @Autowired
+  public UserController(UserRepository userRepo, UserTypeRepository userTypeRepository) {
+    this.userRepository = userRepo;
+    this.userTypeRepository = userTypeRepository;
+  }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.OK)
-	public User create( @RequestBody UserDTO userDto) throws ParseException {
-		UserType userType=userTypeRepository.findByTypeName(userDto.getUserType().getTypeName()).get();
-		User user = new User(userDto);
-		user.setUserType(userType);
-		userRepository.save(user);
-		return user;
-	}
+  @GetMapping
+  public List<UserDTO> list() {
+    return userRepository.findAll().stream().map(u -> {
+      try {
+        return new UserDTO(u);
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }).collect(Collectors.toList());
+  }
 
-	@GetMapping("/{id}")
-	public UserDTO get(@PathVariable("id") long id) throws ParseException {
-		User user = userRepository.getOne(id);
-		UserDTO userDto = new UserDTO(user);
-		return userDto;
-	}
+  @PostMapping
+  @ResponseStatus(HttpStatus.OK)
+  public User create(@RequestBody UserDTO userDto) throws ParseException {
+    UserType userType =
+        userTypeRepository.findByTypeName(userDto.getUserType().getTypeName()).get();
+    User user = new User(userDto);
+    user.setUserType(userType);
+    userRepository.save(user);
+    return user;
+  }
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable String id) {
-		this.userRepository.deleteById(Long.parseLong(id));
-	}
+  @GetMapping("/{id}")
+  public UserDTO get(@PathVariable("id") long id) throws ParseException {
+    User user = userRepository.getOne(id);
+    UserDTO userDto = new UserDTO(user);
+    return userDto;
+  }
+
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable String id) {
+    this.userRepository.deleteById(Long.parseLong(id));
+  }
+
 }

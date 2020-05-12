@@ -16,10 +16,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(name = "USER_TYPE")
-public class UserType implements Serializable{
-	
+public class UserType implements Serializable {
+
 	/**
 	 * 
 	 */
@@ -31,10 +31,10 @@ public class UserType implements Serializable{
 
 	private String typeName;
 
-	@OneToMany(mappedBy = "userType",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "userType", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<User> users;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -61,7 +61,7 @@ public class UserType implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UserType [id=" + id + ", typeName=" + typeName+"]";
+		return "UserType [id=" + id + ", typeName=" + typeName + "]";
 	}
 
 	public UserType(Long id, String typeName, List<User> users) {
@@ -77,7 +77,11 @@ public class UserType implements Serializable{
 	}
 
 	public UserType(String userType) {
-		this.typeName=userType;
+		this.typeName = userType;
+	}
+
+	public UserType() {
+
 	}
 
 }
