@@ -1,6 +1,7 @@
 package com.ctbav.internship.cineplexbackend.controllers;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,43 +22,76 @@ import com.ctbav.internship.cineplexbackend.repositories.MovieRepository;
 @RequestMapping("/api/v1/movies")
 public class MovieController {
 
-	@Autowired
-	private MovieRepository movieRepository;
+  private static final Date CurrentDate = new Date();
 
-	@Autowired
-	private MovieController(MovieRepository repo) {
-		this.movieRepository = repo;
-	}
+  @Autowired
+  private MovieRepository movieRepository;
 
-	@GetMapping()
-	public List<MovieDTO> list() throws ParseException {
-		return movieRepository.findAll().stream().map(m->{
-			try {
-				return new MovieDTO(m);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}).collect(Collectors.toList());
-	}
+  @Autowired
+  private MovieController(MovieRepository repo) {
+    this.movieRepository = repo;
+  }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.OK)
-	public Movie create(@RequestBody MovieDTO movieDto) throws ParseException {
-		Movie movie = new Movie(movieDto);
-		movieRepository.save(movie);
-		return movie;
-	}
+  @GetMapping()
+  public List<MovieDTO> list() throws ParseException {
+    List<Movie> soonMovies = movieRepository.findAll().stream().filter(m -> {
+      try {
+        return CurrentDate.after(m.getCinemaDate());
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      return false;
+    }).collect(Collectors.toList());
+    return soonMovies.stream().map(m -> {
+      try {
+        return new MovieDTO(m);
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }).collect(Collectors.toList());
+  }
 
-	@GetMapping(value = "/{id}", produces = "application/json")
-	public MovieDTO get(@PathVariable("id") long id) throws ParseException {
-		Movie movie = movieRepository.getOne(id);
-		MovieDTO movieDto = new MovieDTO(movie);
-		return movieDto;
-	}
+  @GetMapping()
+  @RequestMapping("/soon")
+  public List<MovieDTO> listSoonMovies() {
+    List<Movie> soonMovies = movieRepository.findAll().stream().filter(m -> {
+      try {
+        return CurrentDate.before(m.getCinemaDate());
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      return false;
+    }).collect(Collectors.toList());
+    return soonMovies.stream().map(m -> {
+      try {
+        return new MovieDTO(m);
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }).collect(Collectors.toList());
+  }
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable String id) {
-		this.movieRepository.deleteById(Long.parseLong(id));
-	}
+
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.OK)
+  public Movie create(@RequestBody MovieDTO movieDto) throws ParseException {
+    Movie movie = new Movie(movieDto);
+    movieRepository.save(movie);
+    return movie;
+  }
+
+  @GetMapping(value = "/{id}", produces = "application/json")
+  public MovieDTO get(@PathVariable("id") long id) throws ParseException {
+    Movie movie = movieRepository.getOne(id);
+    MovieDTO movieDto = new MovieDTO(movie);
+    return movieDto;
+  }
+
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable String id) {
+    this.movieRepository.deleteById(Long.parseLong(id));
+  }
 }
