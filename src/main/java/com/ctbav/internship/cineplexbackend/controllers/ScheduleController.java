@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.ctbav.internship.cineplexbackend.DTO.ScheduleDTO;
@@ -32,11 +35,15 @@ import com.ctbav.internship.cineplexbackend.util.ComparatorSchedule;
 @RestController
 @RequestMapping("/api/v1/schedule")
 public class ScheduleController {
+
   private static final Date CurrentDate = new Date();
-  private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
-  private static final String stringCurrentDate=formatter.format(CurrentDate);
+  private static final SimpleDateFormat formatter =
+      new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+  private static final SimpleDateFormat formatter1 =
+      new SimpleDateFormat("EEE MMM dd yyyy ZZZZ zzzz");
+  private static final String stringCurrentDate = formatter.format(CurrentDate);
   private static final ComparatorSchedule comparatorSchedule = new ComparatorSchedule();
-  
+
   @Autowired
   private ScheduleRepository scheduleRepository;
 
@@ -49,19 +56,19 @@ public class ScheduleController {
     this.movieRepository = movieRepo;
   }
 
-//  @GetMapping
-//  public List<ScheduleDTO> list() throws ParseException {
-//    ComparatorSchedule comparatorSchedule = new ComparatorSchedule();
-//    return scheduleRepository.findAll().stream().sorted(comparatorSchedule::compare).map(t -> {
-//      try {
-//        return new ScheduleDTO(t);
-//      } catch (ParseException e) {
-//        // TODO Auto-generated catch block
-//        e.printStackTrace();
-//      }
-//      return null;
-//    }).collect(Collectors.toList());
-//  }
+  // @GetMapping
+  // public List<ScheduleDTO> list() throws ParseException {
+  // ComparatorSchedule comparatorSchedule = new ComparatorSchedule();
+  // return scheduleRepository.findAll().stream().sorted(comparatorSchedule::compare).map(t -> {
+  // try {
+  // return new ScheduleDTO(t);
+  // } catch (ParseException e) {
+  // // TODO Auto-generated catch block
+  // e.printStackTrace();
+  // }
+  // return null;
+  // }).collect(Collectors.toList());
+  // }
 
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
@@ -79,7 +86,7 @@ public class ScheduleController {
     List<ScheduleDTO> schedulesDTO = new ArrayList<ScheduleDTO>();
     List<Schedule> schedules = scheduleRepository.findAllByScheduledMovie(movie);
     for (Schedule s : schedules) {
-      String stringDate=formatter.format(s.getDate());
+      String stringDate = formatter.format(s.getDate());
       if (stringCurrentDate.equals(stringDate)) {
         ScheduleDTO scheduleDTO = new ScheduleDTO(s);
         schedulesDTO.add(scheduleDTO);
@@ -87,20 +94,17 @@ public class ScheduleController {
     }
     return schedulesDTO.stream().sorted(comparatorSchedule::compare).collect(Collectors.toList());
   }
-  
-  @GetMapping("/{id}")
-  @RequestMapping("changeScheduleByDate")
+
+  @RequestMapping(path = "/changeSchedule/{id}", method = RequestMethod.GET)
   @Temporal(TemporalType.DATE)
-  public List<ScheduleDTO> getScheduleByMovieAndDate(@PathVariable("id") long id,@RequestBody Date date)
-      throws ParseException {
-    System.err.println("I'm here");
+  public List<ScheduleDTO> getScheduleByMovieAndSelectedDate(@PathVariable("id") long id,
+      @RequestParam("date") String date) throws ParseException {
     Optional<Movie> movie = movieRepository.findById(id);
     List<ScheduleDTO> schedulesDTO = new ArrayList<ScheduleDTO>();
     List<Schedule> schedules = scheduleRepository.findAllByScheduledMovie(movie);
     for (Schedule s : schedules) {
-      String stringDate=formatter.format(date);
-      String databaseDateString=formatter.format(s.getDate());
-      if (databaseDateString.equals(stringDate)) {
+      String databaseDateString = formatter.format(s.getDate());
+      if (databaseDateString.equals(date)) {
         ScheduleDTO scheduleDTO = new ScheduleDTO(s);
         schedulesDTO.add(scheduleDTO);
       }
