@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.websocket.server.PathParam;
@@ -29,47 +30,49 @@ import com.ctbav.internship.cineplexbackend.repositories.SeatRepository;
 @RestController
 @RequestMapping("/api/v1/seat")
 public class SeatController {
-	@Autowired
-	private SeatRepository seatRepository;
+  @Autowired
+  private SeatRepository seatRepository;
 
-	@Autowired
-	private MovieRepository movieRepository;
+  @Autowired
+  private MovieRepository movieRepository;
 
-	@Autowired
-	public SeatController(SeatRepository seatRepo, MovieRepository movieRepo) {
-		this.seatRepository = seatRepo;
-		this.movieRepository = movieRepo;
-	}
+  @Autowired
+  public SeatController(SeatRepository seatRepo, MovieRepository movieRepo) {
+    this.seatRepository = seatRepo;
+    this.movieRepository = movieRepo;
+  }
 
-	@GetMapping
-	public List<SeatDTO> list() {
-		return seatRepository.findAll().stream().map(s -> new SeatDTO(s)).collect(Collectors.toList());
-	}
+  @GetMapping
+  public List<SeatDTO> list() {
+    return seatRepository.findAll().stream().map(s -> new SeatDTO(s)).collect(Collectors.toList());
+  }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.OK)
-	public Seat create(@RequestBody SeatDTO seatDto) {
-		Seat seat = new Seat(seatDto);
-		seatRepository.save(seat);
-		return seat;
-	}
+  @PostMapping
+  @ResponseStatus(HttpStatus.OK)
+  public Seat create(@RequestBody SeatDTO seatDto) {
+    Seat seat = new Seat(seatDto);
+    seatRepository.save(seat);
+    return seat;
+  }
 
-	@GetMapping("/{id}")
-	public List<SeatDTO> getAllSeatsByMovie(@PathVariable("id") long id) {
-		List<Seat> seats = new ArrayList<Seat>();
-		Optional<Movie> movie = movieRepository.findById(id);
-		if (movie.isPresent())
-			seats = this.seatRepository.findAllByMovies(movie.get());
-		List<SeatDTO> seatsDTO = new ArrayList<SeatDTO>();
-		for (Seat s : seats) {
-			seatsDTO = seats.stream().map(st -> new SeatDTO(s)).collect(Collectors.toList());
-		}
-		return seatsDTO;
-	}
+  @GetMapping("/{id}")
+  public List<SeatDTO> getAllSeatsByMovie(@PathVariable("id") long id) {
+    List<Seat> seats = new ArrayList<Seat>();
+    Optional<Movie> movie = movieRepository.findById(id);
+    if (movie.isPresent())
+      seats = this.seatRepository.findAllByMovies(movie);
+    List<SeatDTO> seatsDTO = new ArrayList<SeatDTO>();
+    for (Seat s : seats) {
+      SeatDTO seatDTO = new SeatDTO(s);
+      seatsDTO.add(seatDTO);
+      // seatsDTO = seats.stream().map(st -> new SeatDTO(s)).collect(Collectors.toList());
+    }
+    return seatsDTO.stream().collect(Collectors.toList());
+  }
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable String id) {
-		this.seatRepository.deleteById(Long.parseLong(id));
-	}
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable String id) {
+    this.seatRepository.deleteById(Long.parseLong(id));
+  }
 
 }
