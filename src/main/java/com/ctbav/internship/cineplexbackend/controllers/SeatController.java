@@ -18,13 +18,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ctbav.internship.cineplexbackend.DTO.SeatDTO;
 import com.ctbav.internship.cineplexbackend.models.Movie;
+import com.ctbav.internship.cineplexbackend.models.Room;
+import com.ctbav.internship.cineplexbackend.models.Schedule;
 import com.ctbav.internship.cineplexbackend.models.Seat;
 import com.ctbav.internship.cineplexbackend.repositories.MovieRepository;
+import com.ctbav.internship.cineplexbackend.repositories.RoomRepository;
+import com.ctbav.internship.cineplexbackend.repositories.ScheduleRepository;
 import com.ctbav.internship.cineplexbackend.repositories.SeatRepository;
 
 @RestController
@@ -35,6 +41,9 @@ public class SeatController {
 
   @Autowired
   private MovieRepository movieRepository;
+  
+  @Autowired
+  private RoomRepository roomRepository;
 
   @Autowired
   public SeatController(SeatRepository seatRepo, MovieRepository movieRepo) {
@@ -55,12 +64,13 @@ public class SeatController {
     return seat;
   }
 
-  @GetMapping("/{id}")
-  public List<SeatDTO> getAllSeatsByMovie(@PathVariable("id") long id) {
+  @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+  public List<SeatDTO> getAllSeatsByMovie(@PathVariable("id") long id, @RequestParam("room") String roomName) {
     List<Seat> seats = new ArrayList<Seat>();
     Optional<Movie> movie = movieRepository.findById(id);
+    Room room=roomRepository.findByRoomName(roomName);
     if (movie.isPresent())
-      seats = this.seatRepository.findAllByMovies(movie);
+      seats = this.seatRepository.findAllByMoviesAndRooms(movie, room);
     List<SeatDTO> seatsDTO = new ArrayList<SeatDTO>();
     for (Seat s : seats) {
       SeatDTO seatDTO = new SeatDTO(s);
