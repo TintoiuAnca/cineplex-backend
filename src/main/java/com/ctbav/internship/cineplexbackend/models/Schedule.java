@@ -85,6 +85,7 @@ public class Schedule  {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
 	public Date getStartTime() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -112,6 +113,7 @@ public class Schedule  {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
 	public Date getEndTime() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -121,6 +123,7 @@ public class Schedule  {
 	}
 
 	@Temporal(TemporalType.DATE)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getDate() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
