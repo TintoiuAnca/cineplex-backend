@@ -176,7 +176,6 @@ public class MovieDTO implements Serializable {
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String strDate = formatter.format(cinemaDate);
 		Date date = formatter.parse(strDate);
-		System.out.println(date);
 		return date;
 	}
 
